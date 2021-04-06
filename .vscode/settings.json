@@ -1,0 +1,17 @@
+{
+    "cmake.buildDirectory": "C:\\Users\\ZhouZishun\\Desktop\\Build",
+    "fileheader.customMade": {
+        "Author": "Zhou Zishun",
+        "Date": "Do not edit",
+        "LastEditors": "Zhou Zishun",
+        "LastEditTime": "Do not edit",
+        "Description": "file content"
+    },
+    "files.associations": {
+        "qwidget": "cpp"
+    },
+    "cmake.generator": "",
+    "cmake.preferredGenerators": [
+        "NMake Makefiles JOM"
+    ]
+}
