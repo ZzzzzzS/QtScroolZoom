@@ -27,11 +27,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
+find_package(OpenCV REQUIRED)
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        ScrollScale.cpp
+        ScrollScale.hpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -50,4 +54,4 @@ else()
     endif()
 endif()
 
-target_link_libraries(RollScale PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(RollScale PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS})

@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:/ProgramFiles/Qt/5.9.9/msvc2017_64/include/**",
-                "C:/ProgramFiles/OpenCV/include/opencv2/**"
+                "C:/ProgramFiles/OpenCV/include/opencv2/**",
+                "C:/Users/ZhouZishun/Desktop/Build/RollScale_autogen/include_Debug/**"
             ],
             "defines": [
                 "_DEBUG",

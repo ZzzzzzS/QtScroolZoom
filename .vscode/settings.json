@@ -8,7 +8,8 @@
         "Description": "file content"
     },
     "files.associations": {
-        "qwidget": "cpp"
+        "qwidget": "cpp",
+        "qresizeevent": "cpp"
     },
     "cmake.generator": "",
     "cmake.preferredGenerators": [
