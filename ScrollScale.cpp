@@ -2,7 +2,7 @@
  * @Author: Zhou Zishun
  * @Date: 2021-04-07 20:41:08
  * @LastEditors: Zhou Zishun
- * @LastEditTime: 2021-04-08 00:09:29
+ * @LastEditTime: 2021-04-09 09:49:21
  * @Description: file content
  */
 
@@ -20,17 +20,28 @@ ScrollScale::~ScrollScale()
 {
 }
 
+void ScrollScale::SelectImage()
+{
+}
+
+void ScrollScale::SelectPicture()
+{
+    this->ScrolledPicture = this->OriginalPicture.copy(this->SelectedSize.x(), SelectedSize.y(), SelectedSize.width(), SelectedSize.height());
+    this->setPixmap(this->ScrolledPicture.scaled(this->size(), Qt::KeepAspectRatio));
+}
+
 void ScrollScale::LoadPicture(QPixmap &Picture)
 {
+    this->OriginalImage = Picture.toImage();
     this->OriginalPicture = Picture;
     this->ScrolledPicture = this->OriginalPicture;
+    this->ScrolledImage = this->ScrolledPicture.toImage();
     this->setPixmap(Picture.scaled(this->size(), Qt::KeepAspectRatio));
-    this->SelectedSize.StartPoint.width = 0;
-    this->SelectedSize.StartPoint.height = 0;
-    //HACK
-    this->SelectedSize.Length.width = this->ScrolledPicture.width() / 2;
-    this->SelectedSize.Length.height = this->ScrolledPicture.height() / 2;
-    this->SelectedSize.Ratio = (double)(this->ScrolledPicture.height()) / (double)(this->ScrolledPicture.width());
+    this->SelectedSize.setX(0);
+    this->SelectedSize.setY(0);
+    this->SelectedSize.setWidth(this->ScrolledPicture.width());
+    this->SelectedSize.setHeight(this->ScrolledPicture.height());
+    this->Ratio = (double)(this->ScrolledPicture.height()) / (double)(this->ScrolledPicture.width());
 
     qDebug() << "size" << this->ScrolledPicture.size();
 }
@@ -55,60 +66,64 @@ void ScrollScale::mousePressEvent(QMouseEvent *event)
 
 void ScrollScale::mouseMoveEvent(QMouseEvent *event)
 {
-    int width = event->x() - this->ClickedPoint.x();
-    int height = event->y() - this->ClickedPoint.y();
+    int width = this->ClickedPoint.x() - event->x();
+    int height = this->ClickedPoint.y() - event->y();
 
-    if ((width + this->SelectedSize.Length.width) > OriginalPicture.width())
-        width = OriginalPicture.width() - this->SelectedSize.Length.width;
+    if ((width + this->SelectedSize.width()) > OriginalPicture.width())
+        width = OriginalPicture.width() - this->SelectedSize.width();
 
-    if ((height + this->SelectedSize.Length.height) > OriginalPicture.height())
-        height = OriginalPicture.height() - this->SelectedSize.Length.height;
+    if ((height + this->SelectedSize.height()) > OriginalPicture.height())
+        height = OriginalPicture.height() - this->SelectedSize.height();
 
     if (width < 0)
         width = 0;
     if (height < 0)
         height = 0;
 
-    this->SelectedSize.StartPoint.width = width;
-    this->SelectedSize.StartPoint.height = height;
+    this->SelectedSize.setX(width);
+    this->SelectedSize.setY(height);
 
-    qDebug() << "x=" << width << "y=" << height;
+    qDebug() << "x=" << SelectedSize.x() << "y=" << SelectedSize.y();
+    qDebug() << "rx=" << SelectedSize.width() << "ry=" << SelectedSize.height();
+
+    this->SelectPicture();
 }
 
 void ScrollScale::wheelEvent(QWheelEvent *event)
 {
-    this->SelectedSize.Length.width += ((double)(event->angleDelta().y()) * SCROLL_SCALE);
-    this->SelectedSize.Length.height += ((double)(event->angleDelta().y()) * SCROLL_SCALE * SelectedSize.Ratio);
+    this->SelectedSize.setWidth(this->SelectedSize.width() - ((double)(event->angleDelta().y()) * SCROLL_SCALE));
+    this->SelectedSize.setHeight(this->SelectedSize.height() - ((double)(event->angleDelta().y()) * SCROLL_SCALE * Ratio));
 
-    if (this->SelectedSize.Length.width > this->OriginalPicture.width())
-        this->SelectedSize.Length.width = this->OriginalPicture.width();
-    else if (this->SelectedSize.Length.width < MIN_SELECTED_AREA)
-        this->SelectedSize.Length.width = MIN_SELECTED_AREA;
+    if (this->SelectedSize.width() > this->OriginalPicture.width())
+        this->SelectedSize.setWidth(this->OriginalPicture.width());
+    else if (this->SelectedSize.width() < MIN_SELECTED_AREA)
+        this->SelectedSize.setWidth(MIN_SELECTED_AREA);
 
-    if (this->SelectedSize.Length.height > this->OriginalPicture.height())
-        this->SelectedSize.Length.height = this->OriginalPicture.height();
-    else if (this->SelectedSize.Length.height < (MIN_SELECTED_AREA * (double)(this->SelectedSize.Ratio)))
-        this->SelectedSize.Length.height = MIN_SELECTED_AREA * (double)(this->SelectedSize.Ratio);
+    if (this->SelectedSize.height() > this->OriginalPicture.height())
+        this->SelectedSize.setHeight(this->OriginalPicture.height());
+    else if (this->SelectedSize.height() < (MIN_SELECTED_AREA * (double)(this->Ratio)))
+        this->SelectedSize.setHeight(MIN_SELECTED_AREA * (double)(this->Ratio));
 
-    int width = this->SelectedSize.StartPoint.width;
-    int height = this->SelectedSize.StartPoint.height;
+    int width = this->SelectedSize.x();  // + (this->SelectedSize.width() - ((double)(event->angleDelta().y()) * SCROLL_SCALE)) / 2;
+    int height = this->SelectedSize.y(); //+ (this->SelectedSize.height() - ((double)(event->angleDelta().y()) * SCROLL_SCALE * Ratio)) / 2;
 
-    if ((width + this->SelectedSize.Length.width) > OriginalPicture.width())
-        width = OriginalPicture.width() - this->SelectedSize.Length.width;
+    if ((width + this->SelectedSize.width()) > OriginalPicture.width())
+        width = OriginalPicture.width() - this->SelectedSize.width();
 
-    if ((height + this->SelectedSize.Length.height) > OriginalPicture.height())
-        height = OriginalPicture.height() - this->SelectedSize.Length.height;
+    if ((height + this->SelectedSize.height()) > OriginalPicture.height())
+        height = OriginalPicture.height() - this->SelectedSize.height();
 
     if (width < 0)
         width = 0;
     if (height < 0)
         height = 0;
 
-    this->SelectedSize.StartPoint.width = width;
-    this->SelectedSize.StartPoint.height = height;
+    this->SelectedSize.setX(width);
+    this->SelectedSize.setY(height);
 
     qDebug() << "x=" << width << "y=" << height;
-    qDebug() << "rx=" << SelectedSize.Length.width << "ry=" << SelectedSize.Length.height;
+    qDebug() << "rx=" << SelectedSize.width() << "ry=" << SelectedSize.height();
+    this->SelectPicture();
 }
 
 cv::Mat ScrollScale::ConvertQPixmapToMat(QPixmap &InputImage)

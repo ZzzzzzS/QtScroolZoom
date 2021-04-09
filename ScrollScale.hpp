@@ -2,7 +2,7 @@
  * @Author: Zhou Zishun
  * @Date: 2021-04-07 20:40:48
  * @LastEditors: Zhou Zishun
- * @LastEditTime: 2021-04-08 00:05:58
+ * @LastEditTime: 2021-04-09 09:54:29
  * @Description: file content
  */
 
@@ -13,6 +13,7 @@
 #include <QResizeEvent>
 #include <opencv2/opencv.hpp>
 #include <QPoint>
+#include <QRect>
 
 #define SCROLL_SCALE 0.25
 #define MIN_SELECTED_AREA 30
@@ -33,17 +34,49 @@ private:
     QPixmap OriginalPicture;
     QPixmap ScrolledPicture;
 
-    cv::Mat OriginalPicture_CV;
-    cv::Mat ScrolledPicture_CV;
+    QImage OriginalImage;
+    QImage ScrolledImage;
 
-    struct SelectedSize_t
+    class MyRect
     {
-        cv::Size_<int> StartPoint;
-        cv::Size_<int> Length;
-        double Ratio;
+    public:
+        int X, Y, Width, Height;
+        void setX(int a)
+        {
+            X = a;
+        }
+        void setY(int a)
+        {
+            Y = a;
+        }
+        void setWidth(int a)
+        {
+            Width = a;
+        }
+        void setHeight(int a)
+        {
+            Height = a;
+        }
+        int x()
+        {
+            return X;
+        }
+        int y()
+        {
+            return Y;
+        }
+        int width()
+        {
+            return Width;
+        }
+        int height()
+        {
+            return Height;
+        }
     };
 
-    SelectedSize_t SelectedSize;
+    MyRect SelectedSize;
+    double Ratio;
 
     QPoint ClickedPoint;
 
@@ -52,6 +85,7 @@ private:
     static QPixmap ConvertMatToQPixmap(cv::Mat &InputImage);
 
     void SelectImage();
+    void SelectPicture();
 
 protected:
     void resizeEvent(QResizeEvent *event);
