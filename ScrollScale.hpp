@@ -2,7 +2,7 @@
  * @Author: Zhou Zishun
  * @Date: 2021-04-07 20:40:48
  * @LastEditors: Zhou Zishun
- * @LastEditTime: 2021-04-09 09:54:29
+ * @LastEditTime: 2021-04-10 21:58:48
  * @Description: file content
  */
 
@@ -11,7 +11,6 @@
 #include <QPixmap>
 #include <QImage>
 #include <QResizeEvent>
-#include <opencv2/opencv.hpp>
 #include <QPoint>
 #include <QRect>
 
@@ -34,13 +33,9 @@ private:
     QPixmap OriginalPicture;
     QPixmap ScrolledPicture;
 
-    QImage OriginalImage;
-    QImage ScrolledImage;
-
     class MyRect
     {
     public:
-        int X, Y, Width, Height;
         void setX(int a)
         {
             X = a;
@@ -73,6 +68,9 @@ private:
         {
             return Height;
         }
+
+    private:
+        int X, Y, Width, Height;
     };
 
     MyRect SelectedSize;
@@ -81,9 +79,6 @@ private:
     QPoint ClickedPoint;
 
 private:
-    static cv::Mat ConvertQPixmapToMat(QPixmap &InputImage);
-    static QPixmap ConvertMatToQPixmap(cv::Mat &InputImage);
-
     void SelectImage();
     void SelectPicture();
 

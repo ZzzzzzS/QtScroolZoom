@@ -2,7 +2,7 @@
  * @Author: Zhou Zishun
  * @Date: 2021-04-05 22:57:44
  * @LastEditors: Zhou Zishun
- * @LastEditTime: 2021-04-07 23:49:17
+ * @LastEditTime: 2021-04-10 21:11:29
  * @Description: file content
  */
 #include "mainwindow.h"
@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->LabelLayout = new QGridLayout(this->ui->centralwidget);
     this->Label = new ScrollScale(this->ui->centralwidget);
     this->LabelLayout->addWidget(this->Label);
-    this->Label->LoadPicture(QPixmap("C:/Users/ZhouZishun/OneDrive/documents/MasterDoc/PoweredByZZS/RollScale/1.bmp"));
+    this->Label->LoadPicture(QPixmap("C:/Users/ZhouZishun/OneDrive/Images/Saved Pictures/IMG_0025.JPG"));
 }
 
 MainWindow::~MainWindow()
