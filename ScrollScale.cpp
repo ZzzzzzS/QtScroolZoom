@@ -2,7 +2,7 @@
  * @Author: Zhou Zishun
  * @Date: 2021-04-07 20:41:08
  * @LastEditors: Zhou Zishun
- * @LastEditTime: 2021-04-10 22:09:25
+ * @LastEditTime: 2021-04-10 23:16:18
  * @Description: file content
  */
 
@@ -14,13 +14,10 @@ ScrollScale::ScrollScale(QWidget *parents)
     : QLabel(parents)
 {
     this->setAlignment(Qt::AlignCenter);
+    this->setCursor(QCursor(Qt::OpenHandCursor));
 }
 
 ScrollScale::~ScrollScale()
-{
-}
-
-void ScrollScale::SelectImage()
 {
 }
 
@@ -28,7 +25,8 @@ void ScrollScale::SelectPicture()
 {
     this->ScrolledPicture = this->OriginalPicture.copy(this->SelectedSize.x(), SelectedSize.y(), SelectedSize.width(), SelectedSize.height());
     this->setPixmap(this->ScrolledPicture.scaled(this->size(), Qt::KeepAspectRatio));
-    //this->setPixmap(this->ScrolledPicture);
+    qDebug() << "x=" << SelectedSize.x() << "y=" << SelectedSize.y();
+    qDebug() << "rx=" << SelectedSize.width() << "ry=" << SelectedSize.height();
 }
 
 void ScrollScale::LoadPicture(QPixmap &Picture)
@@ -58,22 +56,26 @@ void ScrollScale::resizeEvent(QResizeEvent *event)
 
 void ScrollScale::mousePressEvent(QMouseEvent *event)
 {
+
     if (this->ScrolledPicture.isNull())
         return;
 
-    this->ClickedPoint.setX(this->SelectedSize.x() + event->pos().x());
-    this->ClickedPoint.setY(this->SelectedSize.y() + event->pos().y());
+    this->ClickedPoint.setX(this->SelectedSize.x() + event->pos().x() * (double)this->ScrolledPicture.width() / this->pixmap()->width());
+    this->ClickedPoint.setY(this->SelectedSize.y() + event->pos().y() * (double)this->ScrolledPicture.height() / this->pixmap()->height());
+
+    qDebug() << "clicked";
+    this->SelectPicture();
 }
 
 void ScrollScale::mouseMoveEvent(QMouseEvent *event)
 {
+    this->setCursor(QCursor(Qt::ClosedHandCursor));
+
     if (this->ScrolledPicture.isNull())
         return;
 
-    int width = this->ClickedPoint.x() - event->x();
-    int height = this->ClickedPoint.y() - event->y();
-
-    qDebug() << "sx=" << width << "sy=" << height;
+    int width = this->ClickedPoint.x() - event->x() * (double)this->ScrolledPicture.width() / this->pixmap()->width();
+    int height = this->ClickedPoint.y() - event->y() * (double)this->ScrolledPicture.height() / this->pixmap()->height();
 
     if ((width + this->SelectedSize.width()) > OriginalPicture.width())
         width = OriginalPicture.width() - this->SelectedSize.width();
@@ -89,14 +91,13 @@ void ScrollScale::mouseMoveEvent(QMouseEvent *event)
     this->SelectedSize.setX(width);
     this->SelectedSize.setY(height);
 
-    qDebug() << "x=" << SelectedSize.x() << "y=" << SelectedSize.y();
-    qDebug() << "rx=" << SelectedSize.width() << "ry=" << SelectedSize.height();
-
     this->SelectPicture();
 }
 
 void ScrollScale::wheelEvent(QWheelEvent *event)
 {
+    this->setCursor(QCursor(Qt::OpenHandCursor));
+
     if (this->ScrolledPicture.isNull())
         return;
 
@@ -133,7 +134,10 @@ void ScrollScale::wheelEvent(QWheelEvent *event)
     this->SelectedSize.setX(width);
     this->SelectedSize.setY(height);
 
-    qDebug() << "x=" << width << "y=" << height;
-    qDebug() << "rx=" << SelectedSize.width() << "ry=" << SelectedSize.height();
     this->SelectPicture();
+}
+
+void ScrollScale::mouseReleaseEvent(QMouseEvent *ev)
+{
+    this->setCursor(QCursor(Qt::OpenHandCursor));
 }

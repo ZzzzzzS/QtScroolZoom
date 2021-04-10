@@ -28,7 +28,4 @@ public:
 
 private:
     Ui::MainWindow *ui;
-
-    ScrollScale *Label;
-    QGridLayout *LabelLayout;
 };

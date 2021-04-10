@@ -2,7 +2,7 @@
  * @Author: Zhou Zishun
  * @Date: 2021-04-07 20:40:48
  * @LastEditors: Zhou Zishun
- * @LastEditTime: 2021-04-10 21:58:48
+ * @LastEditTime: 2021-04-10 23:13:43
  * @Description: file content
  */
 
@@ -13,6 +13,7 @@
 #include <QResizeEvent>
 #include <QPoint>
 #include <QRect>
+#include <QCursor>
 
 #define SCROLL_SCALE 0.25
 #define MIN_SELECTED_AREA 30
@@ -79,7 +80,6 @@ private:
     QPoint ClickedPoint;
 
 private:
-    void SelectImage();
     void SelectPicture();
 
 protected:
@@ -87,4 +87,5 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent *event);
+    void mouseReleaseEvent(QMouseEvent *ev);
 };
