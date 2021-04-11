@@ -2,7 +2,7 @@
  * @Author: Zhou Zishun
  * @Date: 2021-04-05 22:57:44
  * @LastEditors: Zhou Zishun
- * @LastEditTime: 2021-04-10 23:04:30
+ * @LastEditTime: 2021-04-11 12:53:00
  * @Description: file content
  */
 #include "mainwindow.h"
@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    this->ui->Label->LoadPicture(QPixmap("C:/Users/ZhouZishun/OneDrive/Images/Saved Pictures/IMG_0025.JPG"));
+    this->ui->Label->LoadPicture(QPixmap("1.bmp"));
 }
 
 MainWindow::~MainWindow()

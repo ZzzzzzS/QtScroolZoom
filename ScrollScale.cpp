@@ -2,7 +2,7 @@
  * @Author: Zhou Zishun
  * @Date: 2021-04-07 20:41:08
  * @LastEditors: Zhou Zishun
- * @LastEditTime: 2021-04-10 23:16:18
+ * @LastEditTime: 2021-04-11 12:50:32
  * @Description: file content
  */
 
@@ -56,6 +56,7 @@ void ScrollScale::resizeEvent(QResizeEvent *event)
 
 void ScrollScale::mousePressEvent(QMouseEvent *event)
 {
+    this->setCursor(QCursor(Qt::ClosedHandCursor));
 
     if (this->ScrolledPicture.isNull())
         return;
@@ -69,7 +70,6 @@ void ScrollScale::mousePressEvent(QMouseEvent *event)
 
 void ScrollScale::mouseMoveEvent(QMouseEvent *event)
 {
-    this->setCursor(QCursor(Qt::ClosedHandCursor));
 
     if (this->ScrolledPicture.isNull())
         return;
