@@ -1,4 +1,4 @@
-/*
+﻿/*
  * @Author: Zhou Zishun
  * @Date: 2021-04-07 20:40:48
  * @LastEditors: Zhou Zishun
@@ -25,6 +25,7 @@
 #include <QPolygon>
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/videoio.hpp>
 
 #define SCROLL_SCALE 0.1
 #define MIN_SELECTED_AREA 30
@@ -55,12 +56,16 @@ signals:
 	void DrawRectangleSignal(QPoint Begin, QPoint End);
 	void DrawCircleSignal(QPoint Center, int Radius);
 	void DrawPointsSignal(std::vector<QPoint> Points);
+	void DrawPointsFinishedSignal(std::vector<std::vector<QPoint>> PointArray);
 	void DrawSinglePointSignal(QPoint Point);
 
+private:
+	void setTranslation();
 private:
 
     QPixmap OriginalPicture;
     QPixmap ScrolledPicture;
+	cv::Mat OriginalMat;
 
     class MyRect
     {
@@ -130,6 +135,11 @@ protected:
 	void paintEvent(QPaintEvent *event);
 	void keyPressEvent(QKeyEvent *event);
 
+	void dragEnterEvent(QDragEnterEvent *event);
+	void dragLeaveEvent(QDragLeaveEvent *event);
+	void dragMoveEvent(QDragMoveEvent *event);
+	void dropEvent(QDropEvent *event);
+
 private:
     class SetPixmapAsyn : public QRunnable
     {
@@ -167,6 +177,8 @@ private:
 	QAction* DrawAnyAction;
 	QAction* DrawSinglePointAction;
 	QAction* CopyToClipboardAction;
+	QAction* ClearScreenAction;
+	QAction* RecordAction;
 	
 	QClipboard* PictureClipboard;
 	
@@ -191,4 +203,14 @@ private:
 	QPainter DrawingPainter;
 
 	QPolygon DrawingPointGroup;
+	QVector<QPolygon> DrawingPointArray;
+	std::vector<std::vector<QPoint>> DrawingPointsOnPictureArray;
+
+private:
+	cv::VideoWriter* VideoRecorder;
+	bool isRecording;
+public:
+	void StartRecord(QString dir);
+	void StopRecord();
+	QString DefaultRecordName;
 };

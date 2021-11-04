@@ -2,7 +2,7 @@
  * @Author: Zhou Zishun
  * @Date: 2021-05-19 17:39:13
  * @LastEditors: Zhou Zishun
- * @LastEditTime: 2021-05-19 17:50:07
+ * @LastEditTime: 2021-05-28 14:01:24
  * @Description: file content
  */
 #include "ScrollZoomWidget.h"
@@ -21,20 +21,19 @@ ScrollZoomWidget::ScrollZoomWidget(QWidget *parent)
 
 	this->ui.label->SetDefaultText(tr("无图片"));
 
-	connect(this->ui.label, &ScrollScale::MousePositionChanged, [this](QPoint P) {
-		ui.lineEdit->setText("X=" + QString::number(P.x()) + " Y=" + QString::number(P.y()));
-	});
+	connect(this->ui.label, &ScrollScale::MousePositionChanged, [this](QPoint P)
+			{ ui.lineEdit->setText("X=" + QString::number(P.x()) + " Y=" + QString::number(P.y())); });
 
-	connect(this->ui.label, &ScrollScale::DrawSinglePointSignal, [this](QPoint P) {
-		qDebug() << "DrawPoint" << P;
-	});
+	connect(this->ui.label, &ScrollScale::DrawSinglePointSignal, [this](QPoint P)
+			{ qDebug() << "DrawPoint" << P; });
 
-	connect(this->ui.label, &ScrollScale::DrawPointsSignal, [this](std::vector<QPoint> P) {
-		for (auto i : P)
-		{
-			qDebug() << i;
-		}
-	});
+	connect(this->ui.label, &ScrollScale::DrawPointsSignal, [this](std::vector<QPoint> P)
+			{
+				for (auto i : P)
+				{
+					qDebug() << i;
+				}
+			});
 }
 
 void ScrollZoomWidget::loadimage()
@@ -73,4 +72,12 @@ void ScrollZoomWidget::UpdateSlot()
 		a.release();
 		this->ui.label->LoadPictureAsyn(a);
 	}
+}
+
+void ScrollZoomWidget::loadimage(char *argv)
+{
+	cv::Mat a = cv::imread(argv);
+
+	this->ui.label->LoadPictureAsyn(a);
+	this->ui.label->AllowPopOut = false;
 }
